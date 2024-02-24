@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "364351589803",
+    "project_id": "statsexpert-8113b",
+    "storage_bucket": "statsexpert-8113b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364351589803:android:c5223a83557c9b974756ee",
+        "android_client_info": {
+          "package_name": "com.example.statsexpert"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC191MBMgFyW62HAkQJTw80UtbnHijrFd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
