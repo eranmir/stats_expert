@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.statsexpert.R
 import com.google.firebase.auth.FirebaseAuth
 
- class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
