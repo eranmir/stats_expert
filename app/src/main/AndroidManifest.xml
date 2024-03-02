@@ -30,6 +30,10 @@
             android:theme="@style/AppTheme.Register" />
 
         <activity
+            android:name=".singlegamescreen.view.GamePageActivity"
+            android:theme="@style/AppTheme.Register" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.StatsExpert"/>
