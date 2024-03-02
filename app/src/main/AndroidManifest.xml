@@ -25,11 +25,13 @@
         <activity
             android:name=".authentication.view.RegisterActivity"
             android:theme="@style/AppTheme.Register" />
+        <activity
+            android:name=".gamescreen.view.GamesActivity"
+            android:theme="@style/AppTheme.Register" />
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.StatsExpert"/>
     </application>
 

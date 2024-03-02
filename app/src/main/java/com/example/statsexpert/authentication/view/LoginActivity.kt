@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.statsexpert.R
+import com.example.statsexpert.gamescreen.view.GamesActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -51,6 +52,9 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Toast.makeText(baseContext, "Login successful.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, GamesActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     // Navigate to the next screen (e.g., main activity)
                 } else {
                     // If sign in fails, display a message to the user.
