@@ -9,6 +9,7 @@ import com.example.statsexpert.R
 import com.example.statsexpert.gamescreen.model.Game
 import com.example.statsexpert.gamescreen.service.ApiService
 import com.example.statsexpert.gamescreen.service.GameCache
+import com.example.statsexpert.navigation.DatePickerFragment
 import kotlinx.coroutines.*
 import okhttp3.OkHttpClient
 import java.util.Calendar
@@ -41,15 +42,14 @@ class GamesActivity : AppCompatActivity() {
         if (cachedGames !== null && cachedGames.isNotEmpty()) {
             displayGames(cachedGames)
         } else {
-            fetchGames()
+            fetchGames(getYesterday())
         }
     }
 
-    private fun fetchGames() {
+    private fun fetchGames(date: Date) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val currentDate = getCurrentDate()
-                games = apiService.getGamesPerDate(currentDate)
+                games = apiService.getGamesPerDate(date)
                 // Save fetched games to cache
                 gamesCache.cacheGames(games)
                 // Update UI on the main thread
@@ -63,11 +63,21 @@ class GamesActivity : AppCompatActivity() {
     }
 
     private fun displayGames(games: List<Game>) {
-        gamesAdapter = GamesAdapter(games)
+        gamesAdapter = GamesAdapter(this, games)
         recyclerView.adapter = gamesAdapter
     }
 
-    private fun getCurrentDate(): Date {
+    fun openDatePicker() {
+        val datePickerFragment = DatePickerFragment(object : DatePickerFragment.DatePickerListener {
+            override fun onDateSelected(date: Long) {
+                val selectedDate = Date(date)
+                fetchGames(selectedDate)
+            }
+        })
+        datePickerFragment.show(supportFragmentManager, "datePicker")
+    }
+
+    private fun getYesterday(): Date {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -1)
         return calendar.time

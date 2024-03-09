@@ -1,3 +1,5 @@
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -5,8 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.statsexpert.R
 import com.example.statsexpert.gamescreen.model.Game
+import com.example.statsexpert.singlegamescreen.view.GamePageActivity
 
-class GamesAdapter(private val games: List<Game>) :
+class GamesAdapter(private val context: Context, private val games: List<Game>) :
     RecyclerView.Adapter<GamesAdapter.GameViewHolder>() {
 
     inner class GameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -36,6 +39,23 @@ class GamesAdapter(private val games: List<Game>) :
         holder.awayTeamTextView.text = currentGame.awayTeamName
         holder.awayScoreTextView.text = currentGame.awayScore.toString()
         holder.awayColorView.setBackgroundColor(currentGame.awayColor)
+
+        // Set click listener for the game item
+        holder.itemView.setOnClickListener {
+            // Create an intent to start the GamePageActivity
+            val intent = Intent(context, GamePageActivity::class.java).apply {
+                // Pass the game data as extras
+                //putExtra("game_date", currentGame.date)
+                putExtra("home_team", currentGame.homeTeamName)
+                putExtra("away_team", currentGame.awayTeamName)
+                putExtra("home_score", currentGame.homeScore)
+                putExtra("away_score", currentGame.awayScore)
+                putExtra("game_id", currentGame.id)
+                // Add more data as needed
+            }
+            // Start the activity with the intent
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = games.size

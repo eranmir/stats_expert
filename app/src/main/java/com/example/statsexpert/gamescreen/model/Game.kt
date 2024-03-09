@@ -1,7 +1,7 @@
 package com.example.statsexpert.gamescreen.model
 
 data class Game(
-    val id: Int,
+    val id: String,
     val date: String,
     val homeTeamName: String,
     val homeScore: String,

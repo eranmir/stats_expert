@@ -34,7 +34,7 @@ class ApiService(private val client: OkHttpClient) {
                 val score = scoresArray.getJSONObject(i)
 
                 val teams = score.getJSONObject("teams")
-                val id = score.getInt("id")
+                val id = score.getString("id")
                 val homeTeamColor = teams.getJSONObject("home").getJSONObject("colors").getString("primary")
                 val awayTeamColor = teams.getJSONObject("away").getJSONObject("colors").getString("primary")
                 val homeTeamName = teams.getJSONObject("home").getJSONObject("names").getString("name")
