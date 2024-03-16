@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.statsexpert.R
+import com.example.statsexpert.shared.BaseActivity
 import com.example.statsexpert.singlegamescreen.model.Comment
 import com.example.statsexpert.singlegamescreen.view.adapter.CommentsAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
-class GamePageActivity : AppCompatActivity() {
+class GamePageActivity : BaseActivity() {
 
     private val PICK_IMAGE_REQUEST = 1
     private lateinit var recyclerViewComments: RecyclerView
