@@ -11,8 +11,11 @@ data class Comment(
     var user: String = "",
     @get:PropertyName("content")
     @set:PropertyName("content")
-    var content: String = ""
+    var content: String = "",
+    @get:PropertyName("gameName")
+    @set:PropertyName("gameName")
+    var gameName: String = ""
 ) {
     // Default no-argument constructor required by Firestore
-    constructor() : this("", "", "")
+    constructor() : this("", "", "", "")
 }

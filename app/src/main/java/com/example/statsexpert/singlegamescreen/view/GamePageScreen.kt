@@ -35,6 +35,10 @@ class GamePageActivity : BaseActivity() {
     private lateinit var textViewAwayTeam: TextView
     private lateinit var textViewAwayScore: TextView
     private lateinit var gameId: String
+    private lateinit var homeTeam: String
+    private lateinit var awayTeam: String
+    private lateinit var homeScore: String
+    private lateinit var awayScore: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,10 +67,10 @@ class GamePageActivity : BaseActivity() {
         textViewAwayScore = findViewById(R.id.textViewAwayScore)
 
         gameId = intent.getStringExtra("game_id")!!
-        val homeTeam = intent.getStringExtra("home_team")
-        val awayTeam = intent.getStringExtra("away_team")
-        val homeScore = intent.getStringExtra("home_score")
-        val awayScore = intent.getStringExtra("away_score")
+        homeTeam = intent.getStringExtra("home_team")!!
+        awayTeam = intent.getStringExtra("away_team")!!
+        homeScore = intent.getStringExtra("home_score")!!
+        awayScore = intent.getStringExtra("away_score")!!
 
         // Initialize RecyclerView for comments
         recyclerViewComments.layoutManager = LinearLayoutManager(this)
@@ -75,7 +79,7 @@ class GamePageActivity : BaseActivity() {
         recyclerViewComments.adapter = commentsAdapter
 
         // Dummy data for comments (replace with actual data from Firebase)
-        gameId.let { loadCommentsForGame(it) }
+        loadCommentsForGame(gameId)
 
         // Button click listener for submitting comments
         buttonSubmitComment.setOnClickListener {
@@ -84,7 +88,7 @@ class GamePageActivity : BaseActivity() {
             if (commentContent.isNotEmpty()) {
                 val currentUser = FirebaseAuth.getInstance().currentUser
                 val username = currentUser?.email ?: "Anonymous"
-                val comment = Comment(gameId, username, commentContent)
+                val comment = Comment(gameId, username, commentContent, "$homeTeam - $awayTeam")
                 addComment(comment)
                 commentsList.add(comment)
                 commentsAdapter.notifyDataSetChanged()
@@ -126,7 +130,7 @@ class GamePageActivity : BaseActivity() {
                 if (commentContent.isNotEmpty()) {
                     val currentUser = FirebaseAuth.getInstance().currentUser
                     val username = currentUser?.email ?: "Anonymous"
-                    val comment = Comment(gameId, username, imageUrl)
+                    val comment = Comment(gameId, username, imageUrl, "$homeTeam - $awayTeam")
                     addComment(comment)
                     commentsList.add(comment)
                     commentsAdapter.notifyDataSetChanged()
