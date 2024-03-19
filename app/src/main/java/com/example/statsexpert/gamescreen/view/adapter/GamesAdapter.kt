@@ -1,13 +1,14 @@
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.content.Context
+import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.statsexpert.R
 import com.example.statsexpert.gamescreen.model.Game
-import com.example.statsexpert.singlegamescreen.view.GamePageActivity
+import com.example.statsexpert.singlegamescreen.view.SingleGameActivity
 
 class GamesAdapter(private val context: Context, private val games: List<Game>) :
     RecyclerView.Adapter<GamesAdapter.GameViewHolder>() {
@@ -40,10 +41,10 @@ class GamesAdapter(private val context: Context, private val games: List<Game>) 
         holder.awayScoreTextView.text = currentGame.awayScore.toString()
         holder.awayColorView.setBackgroundColor(currentGame.awayColor)
 
-        // Set click listener for the game item
+        // Navigate to the SingleGameFragment on click, passing necessary arguments
         holder.itemView.setOnClickListener {
             // Create an intent to start the GamePageActivity
-            val intent = Intent(context, GamePageActivity::class.java).apply {
+            val intent = Intent(context, SingleGameActivity::class.java).apply {
                 // Pass the game data as extras
                 //putExtra("game_date", currentGame.date)
                 putExtra("home_team", currentGame.homeTeamName)

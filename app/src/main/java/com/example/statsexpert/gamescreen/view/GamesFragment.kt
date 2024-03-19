@@ -1,30 +1,31 @@
 package com.example.statsexpert.gamescreen.view
 
 import GamesAdapter
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.statsexpert.R
-import com.example.statsexpert.authentication.view.LoginActivity
 import com.example.statsexpert.gamescreen.model.Game
 import com.example.statsexpert.gamescreen.service.ApiService
 import com.example.statsexpert.gamescreen.service.GameCache
-import com.example.statsexpert.navigation.DatePickerFragment
-import com.example.statsexpert.shared.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
-class GamesActivity : BaseActivity() {
+class GamesFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var gamesAdapter: GamesAdapter
@@ -33,37 +34,36 @@ class GamesActivity : BaseActivity() {
     private val client = OkHttpClient()
     private val apiService = ApiService(client)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_gamescreen)
-        val dateContainer = findViewById<LinearLayout>(R.id.dateContainer)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_games, container, false)
 
-        // Initialize RecyclerView
-        recyclerView = findViewById(R.id.recyclerViewGames)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        gamesCache = GameCache(this)
+        val dateContainer = view.findViewById<LinearLayout>(R.id.dateContainer)
+        recyclerView = view.findViewById(R.id.recyclerViewGames)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        gamesCache = GameCache(requireContext())
 
-        // Attempt to load games from cache
+        val logoutButton: Button = view.findViewById(R.id.logoutButton)
+        logoutButton.setOnClickListener {
+            logout(requireView())
+        }
+
         fetchGames(getYesterday())
 
-        // Initialize the adapter
-        gamesAdapter = GamesAdapter(this, listOf())
+        // Assuming GamesAdapter is modified to accept a NavController
+        gamesAdapter = GamesAdapter(requireContext(), listOf())
+        recyclerView.adapter = gamesAdapter
 
-        // Create and register the observer
-        val observer = object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-                super.onChanged()
-                // Handle data set changed if needed
-            }
-        }
-        gamesAdapter.registerAdapterDataObserver(observer)
+        setupDateBar(dateContainer)
+        return view
+    }
 
+    private fun setupDateBar(dateContainer: LinearLayout) {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DATE, -1)
         val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
 
         for (i in 0 until 7) {
-            val dateTextView = TextView(this)
+            val dateTextView = TextView(requireContext())
             val date = calendar.time // Get the date associated with the TextView
             dateTextView.text = dateFormat.format(date)
             dateTextView.setPadding(16, 8, 16, 8)
@@ -75,18 +75,19 @@ class GamesActivity : BaseActivity() {
             calendar.add(Calendar.DATE, -1)
         }
     }
+    fun logout(view: View) {
+        FirebaseAuth.getInstance().signOut()
+        val navController = Navigation.findNavController(view)
+        navController.navigate(R.id.action_gamesFragment_to_loginFragment)
+    }
 
     private fun fetchGames(date: Date) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val cachedGames = gamesCache.getCachedGames(date)
-                if (cachedGames !== null && cachedGames.isNotEmpty()) {
-                   games = cachedGames
-                } else {
-                    games = apiService.getGamesPerDate(date)
-                    gamesCache.cacheGames(date ,games)
+                games = cachedGames?.takeIf { it.isNotEmpty() } ?: apiService.getGamesPerDate(date).also {
+                    gamesCache.cacheGames(date, it)
                 }
-
                 withContext(Dispatchers.Main) {
                     displayGames(games)
                 }
@@ -97,14 +98,9 @@ class GamesActivity : BaseActivity() {
     }
 
     private fun displayGames(games: List<Game>) {
-        gamesAdapter = GamesAdapter(this, games)
+        gamesAdapter = GamesAdapter(requireContext(), games)
         recyclerView.adapter = gamesAdapter
     }
 
-
-    private fun getYesterday(): Date {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DATE, -1)
-        return calendar.time
-    }
+    private fun getYesterday(): Date = Calendar.getInstance().apply { add(Calendar.DATE, -1) }.time
 }

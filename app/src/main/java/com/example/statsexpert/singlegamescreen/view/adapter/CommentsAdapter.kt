@@ -10,25 +10,29 @@ import com.example.statsexpert.singlegamescreen.model.Comment
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class CommentsAdapter(private val commentsList: List<Comment>) :
+open class CommentsAdapter(var commentsList: MutableList<Comment>) :
     RecyclerView.Adapter<CommentsAdapter.CommentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
         return CommentViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val currentItem = commentsList[position]
         holder.textViewUsername.text = currentItem.user
-        holder.textViewContent.text = currentItem.content
+        holder.textViewContent.text = currentItem.content // Assuming 'commentText' is the correct field for the comment's text
 
-        // Load the image using Picasso if imageUrl is not null
-        if (!currentItem.content.isNullOrEmpty()) {
-            holder.imageViewComment.visibility = View.VISIBLE
-            Picasso.get().load(currentItem.content).into(holder.imageViewComment)
-        } else {
+        // Load the image using Picasso if imageUrl is available
+        // Assuming 'imageUrl' is a field in your Comment model that holds the image URL.
+        currentItem.content.let { url ->
+            if (url.isNotBlank()) {
+                holder.imageViewComment.visibility = View.VISIBLE
+                Picasso.get().load(url).into(holder.imageViewComment)
+            } else {
+                holder.imageViewComment.visibility = View.GONE
+            }
+        } ?: run {
             holder.imageViewComment.visibility = View.GONE
         }
     }
@@ -39,5 +43,15 @@ class CommentsAdapter(private val commentsList: List<Comment>) :
         val textViewUsername: TextView = itemView.findViewById(R.id.userTextView)
         val textViewContent: TextView = itemView.findViewById(R.id.contentTextView)
         val imageViewComment: CircleImageView = itemView.findViewById(R.id.imageViewComment)
+    }
+
+    fun addComment(comment: Comment) {
+        commentsList.add(comment)
+        notifyItemInserted(commentsList.size - 1)
+    }
+
+    fun setComments(comments: List<Comment>) {
+        commentsList = comments.toMutableList()
+        notifyDataSetChanged()
     }
 }

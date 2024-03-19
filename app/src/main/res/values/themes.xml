@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.StatsExpert" parent="android:Theme.Material.Light.NoActionBar" />
-    <style name="AppTheme.Register" parent="Theme.AppCompat.Light.NoActionBar">
+    <!-- Base application theme using Material Components. -->
+    <style name="Theme.StatsExpert" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primaryDark</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondaryDark</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
+
+        <!-- Status bar color. This sets the color of the status bar to match your primary variant color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- Customize the color of the navigation bar. This is useful for ensuring consistency with your app's theme. -->
+        <item name="android:navigationBarColor">@color/navigationBarColor</item>
+
+        <!-- Customization for the ActionBar's text and icons. Although you're using a NoActionBar theme,
+             if you decide to use a Toolbar and style it as an ActionBar, this theme will be applied. -->
+        <item name="actionBarTheme">@style/Theme.StatsExpert.ActionBarTheme</item>
+
+        <!-- Background color for the default window (used when no other background is specified). -->
+        <item name="android:windowBackground">@color/windowBackground</item>
+
+        <!-- TextAppearance styles for different components -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.StatsExpert.Headline1</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.StatsExpert.Body1</item>
+    </style>
+
+    <!-- Style for the register theme, inheriting from the main theme but allowing for further customizations specific to registration screens. -->
+    <style name="AppTheme.Register" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customizations specific to the register screens can be added here. -->
+    </style>
+
+    <!-- ActionBar theme customization -->
+    <style name="Theme.StatsExpert.ActionBarTheme" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="colorOnPrimary">@color/onPrimary</item>
+    </style>
+
+    <!-- Example of additional TextAppearance styles that could be defined for use within your app. -->
+    <style name="TextAppearance.StatsExpert.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/onPrimary</item>
+    </style>
+
+    <style name="TextAppearance.StatsExpert.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/onSecondary</item>
     </style>
 </resources>

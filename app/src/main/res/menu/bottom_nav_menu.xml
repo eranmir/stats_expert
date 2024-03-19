@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/gamesFragment"
+        android:icon="@drawable/ic_games"
+        android:title="@string/title_games" />
+    <item
+        android:id="@+id/userCommentsFragment"
+        android:icon="@drawable/ic_user_comments"
+        android:title="@string/title_comments" />
+</menu>
