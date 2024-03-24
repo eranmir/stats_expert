@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
     id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-kapt")
 }
 
 
@@ -74,15 +75,22 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation ("com.google.code.gson:gson:2.8.8")
+    implementation ("com.google.code.gson:gson:2.10.1")
     implementation ("com.google.android.material:material:1.4.0")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
     implementation ("com.google.android.material:material:<latest_version>")
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.statsexpert.R
 import com.example.statsexpert.singlegamescreen.model.Comment
 import com.example.statsexpert.singlegamescreen.view.adapter.CommentsAdapter
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage

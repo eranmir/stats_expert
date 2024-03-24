@@ -9,23 +9,23 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.example.statsexpert.MyApp
 import com.example.statsexpert.R
-import com.google.firebase.auth.FirebaseAuth
+import com.example.statsexpert.authentication.viewmodel.AuthViewModel
+import com.example.statsexpert.authentication.viewmodel.AuthViewModelFactory
 
 class LoginFragment : Fragment() {
 
-    private lateinit var auth: FirebaseAuth
-
+    private val authViewModel: AuthViewModel by viewModels {
+        AuthViewModelFactory((activity?.application as MyApp).userRepository)
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_login, container, false)
-
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
 
         val emailEditText: EditText = view.findViewById(R.id.email)
         val passwordEditText: EditText = view.findViewById(R.id.password)
@@ -34,36 +34,31 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
-
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "Email and password must not be empty.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            } else {
+                authViewModel.login(email, password)
             }
-
-            loginUser(email, password)
         }
 
         val registerLink = view.findViewById<TextView>(R.id.registerLink)
         registerLink.setOnClickListener {
-            // Navigate to RegisterFragment using NavController
             view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
+
+        observeViewModel()
 
         return view
     }
 
-    private fun loginUser(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(context, "Login successful.", Toast.LENGTH_SHORT).show()
-                    // Navigate to the GamesListFragment using NavController
-                    view?.findNavController()?.navigate(R.id.action_loginFragment_to_gamesListFragment)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
-                }
+    private fun observeViewModel() {
+        authViewModel.loginStatus.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess == true) {
+                Toast.makeText(context, "Login successful.", Toast.LENGTH_SHORT).show()
+                view?.findNavController()?.navigate(R.id.action_loginFragment_to_gamesListFragment)
+            } else {
+                Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
             }
+        }
     }
 }
