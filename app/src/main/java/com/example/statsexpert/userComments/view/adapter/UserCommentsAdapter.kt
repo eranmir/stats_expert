@@ -9,9 +9,8 @@ class UserCommentsAdapter(commentsList: MutableList<Comment>) : CommentsAdapter(
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val currentItem = commentsList[position]
 
-        // Instead of setting the username as text, set the game name or any other desired text.
         holder.textViewUsername.text =
-            currentItem.gameName  // Assuming 'game' is the field for game name.
+            currentItem.gameName
 
         // Comment content remains unchanged.
         holder.textViewContent.text = currentItem.content

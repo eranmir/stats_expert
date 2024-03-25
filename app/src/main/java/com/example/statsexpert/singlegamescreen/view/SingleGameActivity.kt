@@ -123,7 +123,6 @@ class SingleGameActivity : AppCompatActivity() {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
                 // Use the download URL to display or store the image
                 val imageUrl = uri.toString()
-                // Optionally, save the image URL along with other comment details to Firestore or Realtime Database
                 val commentContent = editTextComment.text.toString()
                 if (commentContent.isNotEmpty()) {
                     val currentUser = FirebaseAuth.getInstance().currentUser
@@ -161,7 +160,7 @@ class SingleGameActivity : AppCompatActivity() {
         // Clear the existing comments list
         commentsList.clear()
 
-        // Query Firestore for comments with the specified game ID
+        // query db
         val commentsRef = FirebaseFirestore.getInstance().collection("comments")
             .whereEqualTo("gameId", gameId)
 

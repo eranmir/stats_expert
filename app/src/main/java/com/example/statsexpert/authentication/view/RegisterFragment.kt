@@ -19,6 +19,7 @@ import com.example.statsexpert.authentication.viewmodel.AuthViewModelFactory
 
 class RegisterFragment : Fragment() {
 
+    // init the model
     private val authViewModel: AuthViewModel by viewModels {
         val userDao = AppDatabase.getDatabase(requireContext()).userDao()
         val userRepository = UserRepository(userDao)
@@ -34,12 +35,15 @@ class RegisterFragment : Fragment() {
         val registerButton: Button = view.findViewById(R.id.buttonRegister)
         val loginLink: TextView = view.findViewById(R.id.loginLink)
 
+
+        // function that is called when registering
         registerButton.setOnClickListener {
             val firstName = firstNameEditText.text.toString().trim()
             val lastName = lastNameEditText.text.toString().trim()
             val email = emailEditText.text.toString().trim()
             val password = passwordEditText.text.toString().trim()
 
+            // make null checks
             if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
             } else {

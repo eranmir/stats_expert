@@ -1,5 +1,6 @@
 package com.example.statsexpert.authentication.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class AuthViewModel(private val userRepository: UserRepository): ViewModel() {
+
+    private val _currentUser = MutableLiveData<User?>()
+    val currentUser: LiveData<User?> = _currentUser
+
+
     private val _registrationStatus = MutableLiveData<Boolean?>()
     val registrationStatus: LiveData<Boolean?> = _registrationStatus
 
@@ -31,10 +37,14 @@ class AuthViewModel(private val userRepository: UserRepository): ViewModel() {
                     lastName = lastname,
                     email = email
                 )
-                // Save user to Firestore
+
+
+                // Save user to db
                 FirebaseFirestore.getInstance().collection("users")
                     .document(user.uid)
                     .set(user).await()
+
+                // Save user to room
                 userRepository.insertUser(user)
                 _registrationStatus.postValue(true)
             } catch (e: Exception) {
@@ -46,12 +56,43 @@ class AuthViewModel(private val userRepository: UserRepository): ViewModel() {
     fun login(email: String, password: String) {
         viewModelScope.launch {
             try {
+                val authResult = FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+                val uid = authResult.user?.uid ?: throw IllegalStateException("Authentication failed, user not found.")
 
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).await()
+                val userSnapshot = FirebaseFirestore.getInstance().collection("users").document(uid).get().await()
+                val user = userSnapshot.toObject(User::class.java) ?: throw IllegalStateException("User details not found in Firestore.")
+
+                val existing = userRepository.getUserByUid(uid)
+
+                //check if exists in room
+                if (existing === null) {
+                    userRepository.insertUser(user)
+                }
+
                 _loginStatus.postValue(true)
             } catch (e: Exception) {
+                Log.e("LoginError", "Error during login process", e)
                 _loginStatus.postValue(false)
-                val a = 3
+            }
+        }
+    }
+
+    fun updateUser(user: User) {
+        viewModelScope.launch {
+            userRepository.updateUser(user)
+            FirebaseFirestore.getInstance().collection("users")
+                .document(user.uid)
+                .set(user)
+                .await()
+        }
+    }
+
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            firebaseUser?.uid?.let { uid ->
+                val user = userRepository.getUserByUid(uid)
+                _currentUser.postValue(user)
             }
         }
     }

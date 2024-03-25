@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
         bottomNav.setupWithNavController(navController)
 
-        // Listen for destination changes to show or hide the bottom navigation
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.loginFragment, R.id.registerFragment -> bottomNav.visibility = View.GONE

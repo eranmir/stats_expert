@@ -21,10 +21,9 @@ open class CommentsAdapter(var commentsList: MutableList<Comment>) :
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         val currentItem = commentsList[position]
         holder.textViewUsername.text = currentItem.user
-        holder.textViewContent.text = currentItem.content // Assuming 'commentText' is the correct field for the comment's text
+        holder.textViewContent.text = currentItem.content
 
-        // Load the image using Picasso if imageUrl is available
-        // Assuming 'imageUrl' is a field in your Comment model that holds the image URL.
+        //Load image
         currentItem.content.let { url ->
             if (url.isNotBlank()) {
                 holder.imageViewComment.visibility = View.VISIBLE
@@ -43,15 +42,5 @@ open class CommentsAdapter(var commentsList: MutableList<Comment>) :
         val textViewUsername: TextView = itemView.findViewById(R.id.userTextView)
         val textViewContent: TextView = itemView.findViewById(R.id.contentTextView)
         val imageViewComment: CircleImageView = itemView.findViewById(R.id.imageViewComment)
-    }
-
-    fun addComment(comment: Comment) {
-        commentsList.add(comment)
-        notifyItemInserted(commentsList.size - 1)
-    }
-
-    fun setComments(comments: List<Comment>) {
-        commentsList = comments.toMutableList()
-        notifyDataSetChanged()
     }
 }
